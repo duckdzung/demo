@@ -1,0 +1,50 @@
+version: "3.8"
+
+services:
+  tidb:
+    image: pingcap/tidb:latest
+    container_name: tidb
+    ports:
+      - "4000:4000"
+    volumes:
+      - tidb-data:/var/lib/tidb
+    networks:
+      - my-network
+
+  pd:
+    image: pingcap/pd:latest
+    container_name: pd
+    ports:
+      - "2379:2379"
+    networks:
+      - my-network
+
+  tikv:
+    image: pingcap/tikv:latest
+    container_name: tikv
+    depends_on:
+      - pd
+    ports:
+      - "20160:20160"
+    volumes:
+      - tikv-data:/var/lib/tikv
+    networks:
+      - my-network
+
+  user-service:
+    build: .
+    container_name: user-service
+    ports:
+      - "8080:8080"
+    depends_on:
+      - tidb
+    networks:
+      - my-network
+
+volumes:
+  tidb-data:
+  tikv-data:
+
+networks:
+  my-network:
+    driver: bridge
