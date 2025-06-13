@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tidb-deployment
+  namespace: demo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tidb
+  template:
+    metadata:
+      labels:
+        app: tidb
+    spec:
+      containers:
+        - name: tidb
+          image: pingcap/tidb:latest
+          ports:
+            - containerPort: 4000
+          env:
+            - name: TIDB_STORE
+              value: "unistore"
+            - name: TIDB_PATH
+              value: "/tmp/tidb"
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "500m"
+            limits:
+              memory: "1Gi"
+              cpu: "1000m"
+          volumeMounts:
+            - name: tidb-data
+              mountPath: /tmp/tidb
+      volumes:
+        - name: tidb-data
+          emptyDir: {}
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: tidb-service
+  namespace: demo
+spec:
+  selector:
+    app: tidb
+  ports:
+    - port: 4000
+      targetPort: 4000
+      protocol: TCP
+  type: ClusterIP
