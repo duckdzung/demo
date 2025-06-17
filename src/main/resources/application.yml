@@ -4,7 +4,7 @@ spring:
 
   # Database Configuration for Kubernetes TiDB
   datasource:
-    url: jdbc:mysql://localhost:4000/demo?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true&createDatabaseIfNotExist=true
+    url: jdbc:mysql://tidb:4000/demo?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true&createDatabaseIfNotExist=true
     username: root
     password:
     driver-class-name: com.mysql.cj.jdbc.Driver

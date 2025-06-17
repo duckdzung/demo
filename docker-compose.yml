@@ -37,20 +37,16 @@ services:
     networks:
       - monitoring-network
 
-  # Spring Boot Application
-  # user-service:
-  #   build: .
-  #   container_name: user-service
-  #   ports:
-  #     - "8080:8080"
-  #   depends_on:
-  #     - tidb
-  #   networks:
-  #     - monitoring-network
-  #   environment:
-  #     - MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE=health,info,metrics,prometheus
-  #     - MANAGEMENT_ENDPOINT_PROMETHEUS_ENABLED=true
-  #     - MANAGEMENT_METRICS_EXPORT_PROMETHEUS_ENABLED=true
+# User Service
+  user-service:
+    build: .
+    container_name: user-service
+    ports:
+     - "8080:8080"
+    depends_on:
+     - tidb
+    networks:
+     - monitoring-network
 
   # Prometheus
   prometheus:
