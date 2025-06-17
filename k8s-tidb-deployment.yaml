@@ -12,24 +12,30 @@ spec:
     metadata:
       labels:
         app: tidb
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "10080"
+        prometheus.io/path: "/metrics"
     spec:
       containers:
         - name: tidb
           image: pingcap/tidb:latest
           ports:
             - containerPort: 4000
+            - containerPort: 10080
+              name: metrics
           env:
             - name: TIDB_STORE
               value: "unistore"
             - name: TIDB_PATH
               value: "/tmp/tidb"
-          resources:
-            requests:
-              memory: "512Mi"
-              cpu: "500m"
-            limits:
-              memory: "1Gi"
-              cpu: "1000m"
+          command:
+            - /tidb-server
+          args:
+            - --store=unistore
+            - --path=/tmp/tidb
+            - --log-slow-query=/tmp/tidb/tidb-slow.log
+            - --status=10080
           volumeMounts:
             - name: tidb-data
               mountPath: /tmp/tidb
@@ -49,5 +55,12 @@ spec:
   ports:
     - port: 4000
       targetPort: 4000
+      nodePort: 30400
       protocol: TCP
-  type: ClusterIP
+      name: tidb-port
+    - port: 10080
+      targetPort: 10080
+      nodePort: 30500
+      protocol: TCP
+      name: metrics-port
+  type: NodePort
