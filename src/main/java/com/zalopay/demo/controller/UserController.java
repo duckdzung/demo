@@ -116,7 +116,7 @@ public class UserController {
                     try (Connection connection = dataSource.getConnection()) {
                         connection.setAutoCommit(false);
 
-                        StringBuilder sql = new StringBuilder("INSERT INTO user (id, name) VALUES");
+                        StringBuilder sql = new StringBuilder("INSERT INTO users (id, name) VALUES");
                         for (int j = 0; j < currentBatchSize; j++) {
                             if (j > 0)
                                 sql.append(", ");

@@ -1,0 +1,54 @@
+spring:
+  application:
+    name: demo
+
+  # Database Configuration for Kubernetes TiDB
+  datasource:
+    url: jdbc:mysql://localhost:4000/demo?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true&createDatabaseIfNotExist=true
+    username: root
+    password:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+    # Connection Pool Settings for Bulk Operations
+    hikari:
+      maximum-pool-size: 20
+      minimum-idle: 10
+
+  # JPA/Hibernate Configuration
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        "[format_sql]": true
+    show-sql: true
+
+# Actuator and Prometheus Configuration
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus,metrics
+  endpoint:
+    prometheus:
+      enabled: true
+    health:
+      show-details: always
+    metrics:
+      enabled: true
+  prometheus:
+    metrics:
+      export:
+        enabled: true
+
+  # Custom application metrics
+#   metrics:
+#     distribution:
+#       percentiles-histogram:
+#         '[http.server.requests]': true
+#       percentiles:
+#         '[http.server.requests]': "0.5,0.75,0.95,0.99"
+#     tags:
+#       application: ${spring.application.name}
+#       environment: k8s

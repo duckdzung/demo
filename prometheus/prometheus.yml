@@ -1,0 +1,19 @@
+global:
+  scrape_interval: 3s
+  evaluation_interval: 3s
+
+scrape_configs:
+  # Spring Boot Application with Actuator
+  - job_name: "user-service"
+    metrics_path: "/actuator/prometheus"
+    static_configs:
+      - targets: ["host.docker.internal:8080"]
+
+  # TiDB Database metrics via mysqld_exporter
+#  - job_name: "tidb"
+#    static_configs:
+#      - targets: ["tidb-exporter:9104"]
+
+  - job_name: 'tidb'
+    static_configs:
+      - targets: [ 'tidb:10080' ]
